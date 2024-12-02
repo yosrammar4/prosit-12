@@ -1,44 +1,41 @@
+import java.util.*;
+
+// Classe principale pour tester
 public class Main {
     public static void main(String[] args) {
-        AffectationHashMap affectations = new AffectationHashMap();
+        // Liste d'étudiants
+        List<Student> students = Arrays.asList(
+            new Student(1, "Alice", 22),
+            new Student(2, "Bob", 20),
+            new Student(3, "Charlie", 23)
+        );
 
-        // Créer des employés et des départements
-        Employe e1 = new Employe("Alice", 1);
-        Employe e2 = new Employe("Bob", 2);
-        Employe e3 = new Employe("Charlie", 3);
+        // Gestionnaire des étudiants
+        StudentManagement management = new StudentManagement();
 
-        Departement d1 = new Departement("Informatique");
-        Departement d2 = new Departement("Marketing");
+        // Afficher tous les étudiants
+        System.out.println("Tous les étudiants :");
+        management.displayStudents(students, System.out::println);
 
-        // Ajouter des employés aux départements
-        affectations.ajouterEmployeDepartement(e1, d1);
-        affectations.ajouterEmployeDepartement(e2, d2);
-        affectations.ajouterEmployeDepartement(e3, d1);
+        // Afficher les étudiants âgés de plus de 21 ans
+        System.out.println("\nÉtudiants âgés de plus de 21 ans :");
+        management.displayStudentsByFilter(students, s -> s.getAge() > 21, System.out::println);
 
-        // Afficher les employés et départements
-        affectations.afficherEmployesEtDepartements();
+        // Retourner les noms des étudiants
+        String names = management.returnStudentsNames(students, Student::getName);
+        System.out.println("\nNoms des étudiants : " + names);
 
-        // Tester la suppression d'un employé
-        affectations.supprimerEmploye(e2);
-        affectations.afficherEmployesEtDepartements();
+        // Créer un nouvel étudiant
+        Student newStudent = management.createStudent(() -> new Student(4, "Diana", 21));
+        System.out.println("\nNouvel étudiant créé : " + newStudent);
 
-        // Tester la suppression d'un employé dans un département
-        affectations.supprimerEmployeEtDepartement(e3, d1);
-        affectations.afficherEmployesEtDepartements();
+        // Trier les étudiants par ID
+        List<Student> sortedStudents = management.sortStudentsById(students, Comparator.comparingInt(Student::getId));
+        System.out.println("\nÉtudiants triés par ID :");
+        sortedStudents.forEach(System.out::println);
 
-        // Afficher les employés et départements séparément
-        affectations.afficherEmployes();
-        affectations.afficherDepartements();
-
-        // Rechercher un employé et un département
-        System.out.println("Employé Alice existe ? " + affectations.rechercherEmploye(e1));
-        System.out.println("Département Informatique existe ? " + affectations.rechercherDepartement(d1));
-
-        // Trier la collection par identifiant d'employé
-        System.out.println("Collection triée par identifiant :");
-        TreeMap<Employe, Departement> triee = affectations.trierMap();
-        for (Map.Entry<Employe, Departement> entry : triee.entrySet()) {
-            System.out.println(entry.getKey() + " -> " + entry.getValue());
-        }
+        // Convertir la liste en stream et afficher les étudiants
+        System.out.println("\nÉtudiants via Stream :");
+        management.convertToStream(students).forEach(System.out::println);
     }
 }
